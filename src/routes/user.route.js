@@ -1,6 +1,6 @@
 import {Router } from "express";
 import {Upload} from "../utils/upload.js";
-import { registerUser } from "../controllers/user.controller";
+import { loginuser, registerUser ,logoutuser} from "../controllers/user.controller";
 
 const router = Router()
 
@@ -16,5 +16,9 @@ router.route("/register").post(
         }
     ]),
     registerUser)
+router.route("/login").post(loginuser)
 
+//secured routes
+
+router.route("/logout").post(verifyJWT, logoutuser)
 export default router;
