@@ -17,6 +17,7 @@ router.route("/register").post(
     ]),
     registerUser)
 router.route("/login").post(loginuser)
+router.route("/refresh").post(refreshaccesstoken)
 
 //secured routes
 
