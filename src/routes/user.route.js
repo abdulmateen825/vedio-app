@@ -18,7 +18,10 @@ router.route("/register").post(
     registerUser)
 router.route("/login").post(loginuser)
 router.route("/refresh").post(refreshaccesstoken)
-
+router.route("/changepassword").post(verifyJWT , changecurrentpassword)
+router.route("/updateAccountDetails").post(verifyJWT , updateaccountdetails)
+router.route("/updateAvatar").post(verifyJWT , updateavatarpicture)
+router.route("/updateCoverImage").post(verifyJWT , updatecoverpicture)
 //secured routes
 
 router.route("/logout").post(verifyJWT, logoutuser)
