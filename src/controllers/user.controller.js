@@ -272,6 +272,7 @@ const updateavatarpicture = asynchandler(async (req , res) => {
                 new : true
             }
         ).select("-password")
+
         return res.status(200).json(
             new Apiresponse(
                 200,
@@ -308,6 +309,73 @@ const updatecoverpicture = asynchandler(async (req , res) => {
         )
 })
 
+const getuserchannelprofile = asynchandler( async (req, res) => {
+      const {username } = req.params
+      if(!username?.trim()){
+        throw new APIerror(400 , "username is missing")
+      }
+      const channel = await User.aggregate([
+        {
+            $match : {
+                username :username?.toLowerCase()
+            }
+        },
+        {
+            $lookup : {
+                from : "subscriptions",
+                localField : "_id",
+                foreignField : "channel",
+                as : "subscribers"
+            }
+        },
+        {
+            $lookup : {
+                from : "subscriptions",
+                localField : "_id",
+                foreignField : "subscriber",
+                as : "subscriptions"
+            }
+        },
+        {
+            $addFields : {
+                subscriberscount : {
+                    $size : "$subscribers"
+                },
+                subscriptionscount : {
+                    $size : "$subscriptions"
+                },
+                issubscribed : {
+                    $cond : {
+                        if : {
+                            $in : [req.user?._id , "$subscribers.subscriber"]
+                        }, then: true,
+                        else : false
+                    }
+                }
+
+            }
+        },
+        {
+            $project : {
+                fullname : 1,
+                username : 1,
+                subscriberscount: 1,
+                subscriptionscount : 1,
+                issubscribed : 1,
+                avatar : 1,
+            }
+        }
+         
+
+      ])
+      if(channel?.length){
+        throw new APIerror(200 , "channel  found")
+      }
+      return res.status(200).json(
+        new Apiresponse(
+            200, channel[0], "channel  found")
+        )
+})
 export { registerUser, 
      loginuser , 
      logoutuser ,
@@ -316,5 +384,7 @@ export { registerUser,
      getcurrentuser , 
      updateAccountdetails , 
      updateavatarpicture , 
-     updatecoverpicture}
+     updatecoverpicture,
+     getuserchannelprofile
+    }
 
