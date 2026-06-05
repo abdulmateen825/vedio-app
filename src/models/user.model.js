@@ -1,58 +1,56 @@
-import mongoose , {Schema} from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-const userSchema = new Schema({
-
-    username : {
-        type : String , 
-        required : true,
-        unique : true,
-        lowercase : true,
-        trim : true,
-        index: true
-    },
-    email : {
-        type : String , 
-        required : true,
-        unique : true,
-        lowercase : true,
-        trim : true,
-    },
-    fullname : {
-        type : String , 
-        required : true,
-        trim : true,
-        index: true
-    },
-    avatar : {
-        type : String ,//cloudinary 
-        required : true,
-    },
-    coverimage : {
-        type : String , //cloudinary 
-    },
-    watchhistory : [
-        {
-            type : Schema.Types.ObjectId,
-            ref : "video"
+const userSchema = new Schema(
+    {
+        username: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true,
+            index: true
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true
+        },
+        fullname: {
+            type: String,
+            required: true,
+            trim: true,
+            index: true
+        },
+        avatar: {
+            type: String,
+            required: true
+        },
+        coverImage: {
+            type: String,
+            default: ""
+        },
+        watchHistory: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Video"
+            }
+        ],
+        password: {
+            type: String,
+            required: [true, "password is required"]
+        },
+        refreshToken: {
+            type: String
         }
-    ],
-    password : {
-        type : String ,
-        required : [true , "password is required"],
-
     },
-    refreshtoken: {
-        type : String,
-    },
-
-
- },
- {
-    timestamps: true,
- }
-)
+    {
+        timestamps: true
+    }
+);
 
 
 
@@ -63,7 +61,7 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.methods.isPasswordCorrect = async function (password) {
-    return await bcrypt.compare(password, this.password);
+    return bcrypt.compare(password, this.password);
 };
 
 userSchema.methods.generateAccessToken = function () {
@@ -93,4 +91,4 @@ userSchema.methods.generateRefreshToken = function () {
     );
 };
 
-export const user = mongoose.model("user" , userSchema)
+export const User = mongoose.model("User", userSchema);

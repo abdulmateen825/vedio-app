@@ -1,29 +1,27 @@
-import {v2 as cloudinary} from 'cloudinary';
-import { response } from 'express';
-import fs from 'fs';
-const uploadtocloudinry = async (file) =>{
+import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
+
+const uploadToCloudinary = async (filePath, options = {}) => {
     try {
-        if(!file) return null
-        //upload file
-        cloudinary.uploader.upload(file , {
-            resource_type: "auto"
-        })
-        //file uploaded successfuly
-        return response
-
-        
+        if (!filePath) return null;
+        const uploadResponse = await cloudinary.uploader.upload(filePath, {
+            resource_type: "auto",
+            ...options
+        });
+        fs.unlinkSync(filePath);
+        return uploadResponse;
     } catch (error) {
-        fs.unlinkSync(file) // remove the temporary file from server
-        return null
+        if (filePath && fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+        return null;
     }
-}
+};
 
-
-
- cloudinary.config({
+cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET 
-})
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
-export {uploadtocloudinry}
+export { uploadToCloudinary };
