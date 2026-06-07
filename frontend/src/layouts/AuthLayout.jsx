@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
+import BrandLogo from "../components/BrandLogo.jsx";
 
 const AuthLayout = () => {
   return (
@@ -9,10 +10,10 @@ const AuthLayout = () => {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(194,65,12,0.32),_transparent_60%)]" />
           <div className="relative z-10 flex flex-col justify-between p-12">
             <div>
-              <p className="font-display text-2xl">Vedio</p>
+              <BrandLogo to={null} textClassName="text-white" />
               <p className="mt-4 max-w-sm text-sm text-slate-200">
-                Stream, learn, and build your personal media library with a
-                premium, distraction-free experience.
+                A polished creator video studio for publishing tutorials,
+                showcases, and portfolio-ready media experiences.
               </p>
             </div>
             <div>

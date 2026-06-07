@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#1e1b4b"/>
+  <circle cx="1060" cy="120" r="220" fill="#c2410c" opacity="0.32"/>
+  <circle cx="160" cy="640" r="260" fill="#f5d0fe" opacity="0.18"/>
+  <rect x="80" y="82" width="1160" height="556" rx="42" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.16)" stroke-width="2"/>
+  <text x="112" y="152" fill="#f5d0fe" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="5">REELORA ORIGINAL</text>
+  <text x="112" y="332" fill="#fff7ed" font-family="Arial, Helvetica, sans-serif" font-size="66" font-weight="800">Modern JavaScript Patterns in Real Apps</text>
+  <rect x="112" y="454" width="150" height="150" rx="75" fill="#c2410c"/>
+  <polygon points="172,498 172,564 228,531" fill="#fff7ed"/>
+  <text x="292" y="518" fill="#fed7aa" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700">Technology</text>
+  <text x="292" y="570" fill="#ffffff" opacity="0.78" font-family="Arial, Helvetica, sans-serif" font-size="26">91,300 views</text>
+</svg>

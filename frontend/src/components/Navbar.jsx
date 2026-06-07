@@ -2,6 +2,7 @@ import { FiMenu, FiSearch, FiUpload } from "react-icons/fi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "./Button.jsx";
 import Dropdown from "./Dropdown.jsx";
+import BrandLogo from "./BrandLogo.jsx";
 import { useUI } from "../context/UIContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useState } from "react";
@@ -36,9 +37,7 @@ const Navbar = () => {
           >
             <FiMenu className="text-lg" />
           </button>
-          <Link to="/" className="font-display text-xl text-ink">
-            Vedio
-          </Link>
+          <BrandLogo />
         </div>
 
         <form

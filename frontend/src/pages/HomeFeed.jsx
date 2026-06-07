@@ -61,13 +61,13 @@ const HomeFeed = () => {
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-slate-100 bg-white p-6 shadow-soft">
-        <h2 className="text-xl font-semibold text-ink">Recommended for you</h2>
+        <h2 className="text-xl font-semibold text-ink">Featured on CineNest</h2>
         <p className="mt-2 text-sm text-slate-500">
           {search
             ? `Search results for "${search}".`
             : total
-            ? `${total.toLocaleString()} published videos from the backend.`
-            : "Fresh uploads will appear here as creators publish videos."}
+            ? `${total.toLocaleString()} published videos from creators and studios.`
+            : "Portfolio-ready videos will appear here after seeding your database."}
         </p>
       </div>
 
