@@ -3,7 +3,6 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import AppLayout from "../layouts/AppLayout.jsx";
 import AuthLayout from "../layouts/AuthLayout.jsx";
 
-const LandingPage = lazy(() => import("../pages/LandingPage.jsx"));
 const HomeFeed = lazy(() => import("../pages/HomeFeed.jsx"));
 const VideoWatch = lazy(() => import("../pages/VideoWatch.jsx"));
 const ProfilePage = lazy(() => import("../pages/ProfilePage.jsx"));
@@ -18,8 +17,8 @@ const AppRoutes = () => {
 
   return (
     <Routes location={location} key={location.pathname}>
-      <Route path="/" element={<LandingPage />} />
       <Route element={<AppLayout />}>
+        <Route path="/" element={<HomeFeed />} />
         <Route path="/home" element={<HomeFeed />} />
         <Route path="/watch/:id" element={<VideoWatch />} />
         <Route path="/profile/:id" element={<ProfilePage />} />

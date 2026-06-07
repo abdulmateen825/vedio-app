@@ -1,27 +1,23 @@
 import { motion } from "framer-motion";
 import {
   FiHome,
-  FiTrendingUp,
-  FiLayers,
-  FiClock,
   FiPlayCircle,
-  FiBookmark
+  FiUser
 } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 import { useUI } from "../context/UIContext.jsx";
-
-const menu = [
-  { label: "Home", icon: FiHome, to: "/home" },
-  { label: "Trending", icon: FiTrendingUp, to: "/home" },
-  { label: "Subscriptions", icon: FiLayers, to: "/home" },
-  { label: "Library", icon: FiPlayCircle, to: "/home" },
-  { label: "History", icon: FiClock, to: "/home" },
-  { label: "Watch later", icon: FiBookmark, to: "/home" },
-  { label: "Liked videos", icon: FiPlayCircle, to: "/home" }
-];
+import { useAuth } from "../context/AuthContext.jsx";
 
 const Sidebar = () => {
   const { isSidebarOpen } = useUI();
+  const { user } = useAuth();
+  const menu = [
+    { label: "Home", icon: FiHome, to: "/" },
+    { label: "Upload", icon: FiPlayCircle, to: "/upload" },
+    ...(user?.username
+      ? [{ label: "Profile", icon: FiUser, to: `/profile/${user.username}` }]
+      : [])
+  ];
 
   return (
     <motion.aside

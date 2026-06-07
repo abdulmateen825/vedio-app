@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UploadForm from "../components/UploadForm.jsx";
-import { apiClient } from "../utils/api.js";
+import { apiClient, getApiErrorMessage } from "../utils/api.js";
 import { useToast } from "../context/ToastContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const UploadPage = () => {
   const [values, setValues] = useState({
@@ -15,6 +16,7 @@ const UploadPage = () => {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const { showToast } = useToast();
+  const { isAuthenticated, loadingUser } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -29,6 +31,11 @@ const UploadPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!isAuthenticated) {
+      showToast("Sign in before uploading a video.", "error");
+      navigate("/auth/login");
+      return;
+    }
     if (!files.videoFile || !files.thumbnail || !values.title || !values.duration) {
       showToast("Video, thumbnail, title, and duration are required.", "error");
       return;
@@ -46,7 +53,6 @@ const UploadPage = () => {
       setLoading(true);
       setProgress(0);
       const response = await apiClient.post("/videos", payload, {
-        headers: { "Content-Type": "multipart/form-data" },
         onUploadProgress: (event) => {
           if (event.total) {
             setProgress(Math.round((event.loaded * 100) / event.total));
@@ -61,7 +67,7 @@ const UploadPage = () => {
         navigate("/home");
       }
     } catch (error) {
-      showToast("Upload failed. Please try again.", "error");
+      showToast(getApiErrorMessage(error, "Upload failed."), "error");
     } finally {
       setLoading(false);
     }
@@ -77,11 +83,12 @@ const UploadPage = () => {
       </div>
       <UploadForm
         values={values}
+        files={files}
         progress={progress}
         onChange={handleChange}
         onFileChange={handleFileChange}
         onSubmit={handleSubmit}
-        loading={loading}
+        loading={loading || loadingUser}
       />
     </div>
   );

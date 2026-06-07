@@ -6,7 +6,7 @@ const AuthLayout = () => {
     <div className="min-h-screen bg-white">
       <div className="grid min-h-screen lg:grid-cols-2">
         <div className="relative hidden bg-slate-950 text-white lg:flex">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.3),_transparent_60%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(194,65,12,0.32),_transparent_60%)]" />
           <div className="relative z-10 flex flex-col justify-between p-12">
             <div>
               <p className="font-display text-2xl">Vedio</p>

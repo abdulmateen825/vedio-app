@@ -4,6 +4,7 @@ import Input from "./Input.jsx";
 
 const UploadForm = ({
   values,
+  files,
   progress,
   onChange,
   onFileChange,
@@ -22,7 +23,7 @@ const UploadForm = ({
             Drag & drop your video here
           </p>
           <p className="mt-2 text-xs text-slate-500">
-            MP4, MOV, or AVI up to 1GB
+            {files?.videoFile?.name || "MP4, MOV, or AVI up to 1GB"}
           </p>
           <div className="mt-6">
             <span className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-ink">
@@ -88,6 +89,11 @@ const UploadForm = ({
             onChange={onFileChange}
             className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-ink shadow-sm"
           />
+          {files?.thumbnail && (
+            <span className="text-xs font-normal text-slate-500">
+              Selected: {files.thumbnail.name}
+            </span>
+          )}
         </label>
         <Button className="w-full" disabled={loading}>
           {loading ? "Publishing..." : "Publish video"}

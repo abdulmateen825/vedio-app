@@ -1,8 +1,9 @@
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { stats, trendingVideos } from "../data/mockData.js";
 import Button from "../components/Button.jsx";
 import VideoCard from "../components/VideoCard.jsx";
+import { apiClient, formatCount, mapVideo } from "../utils/api.js";
 
 const features = [
   {
@@ -20,11 +21,53 @@ const features = [
 ];
 
 const LandingPage = () => {
+  const [videos, setVideos] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadVideos = async () => {
+      try {
+        const response = await apiClient.get("/videos", {
+          params: { page: 1, limit: 6 }
+        });
+        const data = response.data?.data || {};
+        if (active) {
+          setVideos((data.items || []).map(mapVideo));
+          setTotal(data.total || 0);
+        }
+      } catch (error) {
+        if (active) {
+          setVideos([]);
+          setTotal(0);
+        }
+      }
+    };
+
+    loadVideos();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const stats = useMemo(
+    () => [
+      { label: "Published videos", value: formatCount(total) },
+      {
+        label: "Total views",
+        value: formatCount(videos.reduce((sum, video) => sum + video.viewsCount, 0))
+      },
+      { label: "Latest uploads", value: formatCount(videos.length) },
+      { label: "API status", value: videos.length || total ? "Live" : "Ready" }
+    ],
+    [total, videos]
+  );
+
   return (
     <div className="min-h-screen bg-white">
       <div className="relative overflow-hidden">
-        <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-brand/10 blur-3xl" />
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-20 pt-24 lg:flex-row lg:items-center">
+        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-20 pt-20 lg:flex-row lg:items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -59,11 +102,18 @@ const LandingPage = () => {
             transition={{ duration: 0.5 }}
             className="flex-1"
           >
-            <div className="rounded-3xl border border-slate-100 bg-slate-50 p-6 shadow-soft">
+            <div className="rounded-xl border border-slate-100 bg-slate-50 p-6 shadow-soft">
               <div className="grid gap-4 md:grid-cols-2">
-                {trendingVideos.slice(0, 4).map((video) => (
-                  <VideoCard key={video.id} video={video} />
+                {videos.slice(0, 4).map((video) => (
+                  <Link key={video.id} to={`/watch/${video.id}`}>
+                    <VideoCard video={video} />
+                  </Link>
                 ))}
+                {videos.length === 0 && (
+                  <div className="col-span-full rounded-xl border border-dashed border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
+                    Published videos from your backend will appear here.
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
@@ -75,7 +125,7 @@ const LandingPage = () => {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="rounded-2xl border border-slate-100 bg-white p-6 shadow-sm"
+              className="rounded-xl border border-slate-100 bg-white p-6 shadow-sm"
             >
               <h3 className="text-lg font-semibold text-ink">
                 {feature.title}
@@ -97,15 +147,17 @@ const LandingPage = () => {
             </Link>
           </div>
           <div className="mt-6 grid gap-6 md:grid-cols-3">
-            {trendingVideos.slice(0, 3).map((video) => (
-              <VideoCard key={video.id} video={video} />
+            {videos.slice(0, 3).map((video) => (
+              <Link key={video.id} to={`/watch/${video.id}`}>
+                <VideoCard video={video} />
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-16">
-        <div className="grid gap-6 rounded-3xl border border-slate-100 bg-white p-8 shadow-soft md:grid-cols-4">
+        <div className="grid gap-6 rounded-xl border border-slate-100 bg-white p-8 shadow-soft md:grid-cols-4">
           {stats.map((stat) => (
             <div key={stat.label}>
               <p className="text-2xl font-semibold text-ink">{stat.value}</p>
@@ -116,7 +168,7 @@ const LandingPage = () => {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pb-20">
-        <div className="rounded-3xl bg-brand px-8 py-12 text-white shadow-lift">
+        <div className="rounded-xl bg-brand px-8 py-12 text-white shadow-lift">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
               <h3 className="text-2xl font-semibold">

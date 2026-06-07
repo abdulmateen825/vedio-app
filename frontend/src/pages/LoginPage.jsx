@@ -2,13 +2,15 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/Button.jsx";
 import Input from "../components/Input.jsx";
-import { apiClient } from "../utils/api.js";
+import { getApiErrorMessage } from "../utils/api.js";
 import { useToast } from "../context/ToastContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const LoginPage = () => {
   const [values, setValues] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const { showToast } = useToast();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -25,11 +27,11 @@ const LoginPage = () => {
 
     try {
       setLoading(true);
-      await apiClient.post("/users/login", values);
+      await login(values);
       showToast("Welcome back!");
       navigate("/home");
     } catch (error) {
-      showToast("Login failed. Please check your credentials.", "error");
+      showToast(getApiErrorMessage(error, "Login failed."), "error");
     } finally {
       setLoading(false);
     }

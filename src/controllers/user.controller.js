@@ -38,8 +38,11 @@ const registerUser = asynchandler(async (req, res) => {
         throw new APIerror(400, "All fields are required");
     }
 
+    const normalizedUsername = username.trim().toLowerCase();
+    const normalizedEmail = email.trim().toLowerCase();
+
     const existedUser = await User.findOne({
-        $or: [{ email }, { username }]
+        $or: [{ email: normalizedEmail }, { username: normalizedUsername }]
     });
 
     if (existedUser) {
@@ -57,13 +60,18 @@ const registerUser = asynchandler(async (req, res) => {
     const coverCloud = await uploadToCloudinary(coverImageLocalPath);
 
     if (!avatarCloud?.url) {
-        throw new APIerror(400, "Error while uploading avatar");
+        throw new APIerror(
+            400,
+            avatarCloud?.code === "CLOUDINARY_CONFIG_MISSING"
+                ? "Cloudinary credentials are missing in backend .env"
+                : avatarCloud?.error || "Error while uploading avatar"
+        );
     }
 
     const newUser = await User.create({
-        username: username.toLowerCase(),
-        fullname,
-        email,
+        username: normalizedUsername,
+        fullname: fullname.trim(),
+        email: normalizedEmail,
         password,
         avatar: avatarCloud.url,
         coverImage: coverCloud?.url || ""
@@ -240,7 +248,12 @@ const updateAvatarPicture = asynchandler(async (req, res) => {
 
     const avatarCloud = await uploadToCloudinary(avatarLocalPath);
     if (!avatarCloud?.url) {
-        throw new APIerror(400, "Error while uploading avatar");
+        throw new APIerror(
+            400,
+            avatarCloud?.code === "CLOUDINARY_CONFIG_MISSING"
+                ? "Cloudinary credentials are missing in backend .env"
+                : avatarCloud?.error || "Error while uploading avatar"
+        );
     }
 
     const user = await User.findByIdAndUpdate(
@@ -262,7 +275,12 @@ const updateCoverPicture = asynchandler(async (req, res) => {
 
     const coverCloud = await uploadToCloudinary(coverImageLocalPath);
     if (!coverCloud?.url) {
-        throw new APIerror(400, "Error while uploading cover image");
+        throw new APIerror(
+            400,
+            coverCloud?.code === "CLOUDINARY_CONFIG_MISSING"
+                ? "Cloudinary credentials are missing in backend .env"
+                : coverCloud?.error || "Error while uploading cover image"
+        );
     }
 
     const user = await User.findByIdAndUpdate(
@@ -319,6 +337,7 @@ const getUserChannelProfile = asynchandler(async (req, res) => {
         },
         {
             $project: {
+                _id: 1,
                 fullname: 1,
                 username: 1,
                 subscribersCount: 1,

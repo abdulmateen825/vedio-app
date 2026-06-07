@@ -33,7 +33,8 @@ const createVideo = asynchandler(async (req, res) => {
         description: description?.trim() || "",
         duration: Number(duration),
         tags: typeof tags === "string" ? tags.split(",").map((t) => t.trim()) : tags,
-        category: category?.trim()
+        category: category?.trim(),
+        isPublished: true
     });
 
     return res
@@ -101,7 +102,9 @@ const getVideoById = asynchandler(async (req, res) => {
         await Video.findByIdAndUpdate(video._id, { $inc: { views: 1 } });
         if (req.user) {
             await User.findByIdAndUpdate(req.user._id, {
-                $pull: { watchHistory: video._id },
+                $pull: { watchHistory: video._id }
+            });
+            await User.findByIdAndUpdate(req.user._id, {
                 $push: {
                     watchHistory: {
                         $each: [video._id],

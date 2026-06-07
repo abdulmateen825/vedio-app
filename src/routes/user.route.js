@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
-import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { verifyJWT, optionalAuth } from "../middlewares/auth.middleware.js";
 import {
     registerUser,
     loginUser,
@@ -39,7 +39,7 @@ router
     .route("/update-cover")
     .patch(verifyJWT, upload.single("coverImage"), updateCoverPicture);
 
-router.route("/c/:username").get(verifyJWT, getUserChannelProfile);
+router.route("/c/:username").get(optionalAuth, getUserChannelProfile);
 router.route("/watch-history").get(verifyJWT, getWatchHistory);
 
 export default router;

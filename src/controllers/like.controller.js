@@ -19,7 +19,8 @@ const toggleLike = asynchandler(async (req, res) => {
 
     if (targetType === "Video") {
         const video = await Video.findById(targetId);
-        if (!video || !video.isPublished) {
+        const isOwner = video?.owner?.toString() === req.user._id.toString();
+        if (!video || (!video.isPublished && !isOwner)) {
             throw new APIerror(404, "Video not found");
         }
     }

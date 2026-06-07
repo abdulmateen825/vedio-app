@@ -11,9 +11,15 @@ const ForgotPasswordPage = () => {
           We will send a reset link to your email.
         </p>
       </div>
-      <div className="space-y-4 rounded-2xl border border-slate-100 bg-white p-6 shadow-soft">
-        <Input label="Email" placeholder="you@example.com" />
-        <Button className="w-full">Send reset link</Button>
+      <div className="space-y-4 rounded-xl border border-slate-100 bg-white p-6 shadow-soft">
+        <Input label="Email" placeholder="you@example.com" disabled />
+        <Button className="w-full" disabled>
+          Reset endpoint unavailable
+        </Button>
+        <p className="text-xs text-slate-500">
+          Password reset needs a backend email/reset-token endpoint before this
+          form can be enabled.
+        </p>
       </div>
       <p className="text-sm text-slate-500">
         Remember your password?{" "}
